@@ -1,14 +1,18 @@
 import os
-from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
+os.environ["TRANSFORMERS_VERBOSITY"] = "error"
+
+from langchain_huggingface import ChatHuggingFace, HuggingFacePipeline
 from dotenv import load_dotenv
 
 load_dotenv()
 
-llm = HuggingFaceEndpoint(
-    repo_id="Qwen/Qwen2.5-Coder-32B-Instruct",
+if os.getenv("HUGGINGFACEHUB_API_KEY"):
+    os.environ["HF_TOKEN"] = os.getenv("HUGGINGFACEHUB_API_KEY")
+
+llm = HuggingFacePipeline.from_model_id(
+    model_id="Qwen/Qwen2.5-0.5B-Instruct",
     task="text-generation",
-    temperature=0,  # Added temperature here
-    huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_KEY")
+    pipeline_kwargs={"max_new_tokens": 200, "temperature": 0.7}
 )
 
 model = ChatHuggingFace(llm=llm)

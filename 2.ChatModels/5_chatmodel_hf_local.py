@@ -1,22 +1,29 @@
-import os
-os.environ["TRANSFORMERS_VERBOSITY"] = "error"
-
 from langchain_huggingface import ChatHuggingFace, HuggingFacePipeline
-from dotenv import load_dotenv
 
-load_dotenv()
+import os
 
-if os.getenv("HUGGINGFACEHUB_API_KEY"):
-    os.environ["HF_TOKEN"] = os.getenv("HUGGINGFACEHUB_API_KEY")
 
-llm = HuggingFacePipeline.from_model_id(
-    model_id="Qwen/Qwen2.5-0.5B-Instruct",
+
+os.environ["HF_HOME"] = 'D:/My Projects/Langchain_models/.cache/huggingface'
+
+llm = HuggingFacePipeline.from_model-id(
+
+    model_id="Qwen/Qwen2.5-Coder-32B-Instruct",
+
     task="text-generation",
-    pipeline_kwargs={"max_new_tokens": 100}
+
+    model_kwargs={"temperature": 0.9, "max_new_tokens": 1000}
+
 )
+
+
 
 model = ChatHuggingFace(llm=llm)
 
-result = model.invoke("What is the capital of India?")
+
+
+result = model.invoke("What is the name of the prime minister of Pakistan?")
+
+
 
 print(result.content)
